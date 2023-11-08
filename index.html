@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            border: 0;
+            overflow-x: hidden;
+        }
+        video{
+            background-image: url('https://create-images-results.d-id.com/google-oauth2%7C109795923262889365844/upl_F1PnQESsVmCZEzkPgWYFG/image.png');
+            background-repeat: no-repeat;
+            background-size: 1100px;
+            background-position: center;
+            background-position-y: -665px ;
+            background-color: black;
+            width: 100vw;
+            height: 100vh;
+        }
+        .main{
+            width: 100%;
+            height: 100vh;
+        }
+        .botones{
+            width: 100%;
+            height: 40vh;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            flex-direction: row;
+            list-style: none;
+        }
+        button{
+            background: #292929;
+            padding: 11px;
+            display: inline;
+            color:white;
+            border-radius: 5px;
+            border: none;
+
+        }
+        #CREDITO{
+            background: #292929;
+            padding: 5px;
+            display: inline;
+            color:white;
+            border-radius: 5px;
+        }
+        .listasDes{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        ul{
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <video id="talk-video"  autoplay ></video>
+        <div class="botones"> 
+            <ul class="listasDes">
+                <li>
+                    Creditos: <h2 id="CREDITO"></h2>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
