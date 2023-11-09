@@ -1,5 +1,5 @@
 "use strict";
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 let credito = document.getElementById("CREDITO");
 let oIa;
 const talkVideo = document.getElementById('talk-video');
@@ -127,8 +127,8 @@ async function Converter(prompt){
         return await oRess.json();
     }
     let data = await llamada(prompt);
-    console.log(data.choices[0].text);
-    let textito = data.choices[0].text
+    await console.log(data.choices[0].text);
+    let textito = data.choices[0].text;
     await speech(textito)
 }
 async function speech(testoInasno) {
