@@ -121,6 +121,12 @@ window.onload = async function () {
         const remoteStream = event.streams[0];
         setVideoElement(remoteStream);
     }
+    async function setVideoElement(stream) {
+        talkVideo.srcObject = stream;
+        if (talkVideo.paused) {
+            talkVideo.play().then(_ => { }).catch(e => { });
+        }
+    }
     async function createPeerConnection(offer, iceServers) {
         peerConnection = new RTCPeerConnection({ iceServers });
         peerConnection.addEventListener('icecandidate', onIceCandidate, true);
@@ -204,10 +210,5 @@ window.onload = async function () {
             }).catch(err => console.error(err));
         return;
     };
-    async function setVideoElement(stream) {
-        talkVideo.srcObject = stream;
-        if (talkVideo.paused) {
-            talkVideo.play().then(_ => { }).catch(e => { });
-        }
-    }
+    
 }
