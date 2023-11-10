@@ -1,51 +1,57 @@
 "use strict";
-window.onload = function () {
+let timem;
+let talkVideo = document.getElementById('talk-video');
+let bol= false;
+window.onload = function() {
+    let transcripts;
+    let transcripts2;
+    let recognition;
     // Verificar si el navegador admite el reconocimiento de voz
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'es-ES'; // Establecer el idioma, por ejemplo, español de España
-        var recognition2 = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition2.lang = 'es-ES';
-        recognition2.continuous = false;
-        function reconocerPalabra() {
+        async function reconocerPalabra() {
+            recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'es-ES';
             recognition.continuous = true;
-            // Iniciar el reconocimiento de voz cuando se carga la página
+            recognition.interimResult = false;
             recognition.start();
-            recognition.onresult = function (event) {
-                const transcript = [];
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    transcript.push(event.results[i][0].transcript);
-                    console.log(event.results[i][0].transcript);
-                }
-
-                if (transcript.includes(' profe') || transcript.includes(' profesor') || transcript.includes('profesor') || transcript.includes('profe')) {
-                    recognition.abort();
-                    startListening();
-                    console.log('escuchando...')
-                }
-            };
-        }
-
-        function startListening() {
-            recognition2.start();
-            recognition2.onresult = async function (event) {
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    console.log(event.results[i][0].transcript);
-                    let TEXTOINSANO=await event.results[i][0].transcript;
-                    await Converter(TEXTOINSANO);
+            recognition.onresult = async function(e) {
+                transcripts = await e.results[e.results.length - 1][0].transcript;
+                console.log(transcripts);
+                if (transcripts === ' profe' || ' profesor' || 'profe' || 'profesor') {
+                    await recognition.stop();
+                    setTimeout(function(){
+                        startListening()
+                        console.log("escuchando...")
+                        return;
+                    },2000)
                 }
             };
         }
-
+        async function startListening() {
+            recognition.continuous = false;
+            recognition.start();
+            recognition.onresult = async function(e) {
+                transcripts2 = await e.results[e.results.length - 1][0].transcript;
+                console.log(transcripts2)
+                setTimeout(function(){
+                    GPT(transcripts2);
+                    return;
+                },2000)
+            };
+        }
+        async function GPT(p1) {
+            await recognition.abort();
+            Converter(p1);
+            
+            return;
+        }
         reconocerPalabra();
-
     } else {
         alert('El reconocimiento de voz no es compatible con este navegador.');
         // Aquí puedes proporcionar una alternativa para navegadores que no admiten el reconocimiento de voz
     }
 };
 let credito = document.getElementById("CREDITO");
-const talkVideo = document.getElementById('talk-video');
 const stream = document.getElementById('STREAM');
 talkVideo.setAttribute('playsinline', '');
 let sessionClientAnswer;
@@ -54,7 +60,7 @@ let headersList = {
     Accept: "application/json",
     Authorization: "application/json",
     Authorization:
-        "Basic ZUdSa1pHVnJhWE5rWlVCbmJXRnBiQzVqYjIwOlJ6aWFxeVQ4ODlfT0NSVVdUX2xmaw==",
+        "Basic YzJWeVoybHZhVzV6WVc1dmNHRmtRR2R0WVdsc0xtTnZiUTpZU2REWFZFdWhfdUpCbUVYdXRVTXI=",
 };
 await fetch("https://api.d-id.com/credits", {
     method: "GET",
@@ -74,7 +80,7 @@ let header = {
     Accept: "application/json",
     Authorization: "application/json",
     Authorization:
-        "Basic ZUdSa1pHVnJhWE5rWlVCbmJXRnBiQzVqYjIwOlJ6aWFxeVQ4ODlfT0NSVVdUX2xmaw=='",
+        "Basic YzJWeVoybHZhVzV6WVc1dmNHRmtRR2R0WVdsc0xtTnZiUTpZU2REWFZFdWhfdUpCbUVYdXRVTXI=",
     "Content-Type": "application/json",
 };
 let body = JSON.stringify({
@@ -139,7 +145,6 @@ const sdpResponse = await fetch(`https://api.d-id.com/talks/streams/${streamId}/
 });
 let date = await sdpResponse.text();
 console.log('FETCH TO SDP :' + date);
-
 async function Converter(prompt) {
     await prompt;
     async function llamada(messages) {
@@ -148,11 +153,11 @@ async function Converter(prompt) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer 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",
+                Authorization: "Bearer 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",
             },
             body: JSON.stringify({
                 model: "text-davinci-003",
-                prompt: "responde en español y en pocas palabras el siguiente mensaje :" + messages,
+                prompt: "responde en español y se breve en el siguiente mensaje :" + messages,
                 max_tokens: 2000,
             }),
         });
@@ -182,13 +187,22 @@ async function speech(testoInasno) {
     };
     fetch(`https://api.d-id.com/talks/streams/${streamId}`, options)
         .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(err => console.error(err));
-    return;
-};
-async function setVideoElement(stream) {
-    talkVideo.srcObject = stream;
-    if (talkVideo.paused) {
-        talkVideo.play().then(_ => { }).catch(e => { });
+        .then((response) => {
+            console.log(response.duration)
+            timem= response.duration * 1000
+            console.log(timem)
+            bol=true;
+        }).catch(err => console.error(err));
+        return;
+    };
+    async function setVideoElement(stream) {
+        talkVideo.srcObject = stream;
+        if (talkVideo.paused) {
+            talkVideo.play().then(_ => { }).catch(e => { });
+            talkVideo.addEventListener('ended', function() {
+                alert('El video ha concluido');
+                reconocerPalabra();
+                    return;
+              });
     }
 }
