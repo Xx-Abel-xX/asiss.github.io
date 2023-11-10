@@ -117,15 +117,15 @@ window.onload = async function () {
                 });
         }
     }
-    function onTrack(event) {
-        const remoteStream = event.streams[0];
-        setVideoElement(remoteStream);
-    }
     async function setVideoElement(stream) {
         talkVideo.srcObject = stream;
         if (talkVideo.paused) {
             talkVideo.play().then(_ => { }).catch(e => { });
         }
+    }
+    function onTrack(event) {
+        const remoteStream = event.streams[0];
+        setVideoElement(remoteStream);
     }
     async function createPeerConnection(offer, iceServers) {
         peerConnection = new RTCPeerConnection({ iceServers });
@@ -166,14 +166,14 @@ window.onload = async function () {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer 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",
+                    Authorization: "Bearer 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",
                 },
                 body: JSON.stringify({
                     model: "gpt-3.5-turbo",
                     messages: [
                         {
                             "role": "user",
-                            "content": "responde en español y se breve en el siguiente mensaje: " + messages
+                            "content": "responde en español y con mas de 15 palabras el siguiente mensaje: " + messages
                         },
                     ],
                     max_tokens: 2000,
