@@ -166,7 +166,7 @@ window.onload = async function () {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer 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",
+                    Authorization: "Bearer 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",
                 },
                 body: JSON.stringify({
                     model: "gpt-3.5-turbo",
