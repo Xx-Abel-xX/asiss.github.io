@@ -1,7 +1,50 @@
 "use strict";
-const OPENAI_API_KEY = "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";
+window.onload = function () {
+    // Verificar si el navegador admite el reconocimiento de voz
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'es-ES'; // Establecer el idioma, por ejemplo, español de España
+        var recognition2 = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition2.lang = 'es-ES';
+        recognition2.continuous = false;
+        function reconocerPalabra() {
+            recognition.continuous = true;
+            // Iniciar el reconocimiento de voz cuando se carga la página
+            recognition.start();
+            recognition.onresult = function (event) {
+                const transcript = [];
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript.push(event.results[i][0].transcript);
+                    console.log(event.results[i][0].transcript);
+                }
+
+                if (transcript.includes(' profe') || transcript.includes(' profesor')) {
+                    recognition.abort();
+                    startListening();
+                    console.log('escuchando...')
+                }
+            };
+        }
+
+        function startListening() {
+            recognition2.start();
+            recognition2.onresult = async function (event) {
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    console.log(event.results[i][0].transcript);
+                    let TEXTOINSANO=await event.results[i][0].transcript;
+                    await Converter(TEXTOINSANO);
+                }
+            };
+        }
+
+        reconocerPalabra();
+
+    } else {
+        alert('El reconocimiento de voz no es compatible con este navegador.');
+        // Aquí puedes proporcionar una alternativa para navegadores que no admiten el reconocimiento de voz
+    }
+};
 let credito = document.getElementById("CREDITO");
-let oIa;
 const talkVideo = document.getElementById('talk-video');
 const stream = document.getElementById('STREAM');
 talkVideo.setAttribute('playsinline', '');
@@ -96,31 +139,20 @@ const sdpResponse = await fetch(`https://api.d-id.com/talks/streams/${streamId}/
 });
 let date = await sdpResponse.text();
 console.log('FETCH TO SDP :' + date);
-document.addEventListener("click", GPT);
-async function GPT() {
-    const reconocer = new webkitSpeechRecognition();
-    reconocer.continuous = false;
-    reconocer.interimResults = false;
-    reconocer.lang = "ES";
-    reconocer.start();
-    reconocer.onresult = async (e) => {
-        oIa = await e.results[0][0].transcript;
-        console.log(oIa);
-        await Converter(oIa);
-    };
-}
-async function Converter(prompt){
+
+async function Converter(prompt) {
+    await prompt;
     async function llamada(messages) {
         await messages;
         let oRess = await fetch(`https://api.openai.com/v1/completions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${OPENAI_API_KEY}`,
+                Authorization: "Bearer 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",
             },
             body: JSON.stringify({
                 model: "text-davinci-003",
-                prompt: "responde en español y en pocas palabras el siguiente texto :" + messages,
+                prompt: "responde en español y en pocas palabras el siguiente mensaje :" + messages,
                 max_tokens: 2000,
             }),
         });
