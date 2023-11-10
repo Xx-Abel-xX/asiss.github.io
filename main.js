@@ -1,12 +1,10 @@
 "use strict";
-let timem;
 let talkVideo = document.getElementById('talk-video');
 let bol = false;
 window.onload = async function () {
     let transcripts;
     let transcripts2;
     let recognition;
-    // Verificar si el navegador admite el reconocimiento de voz
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
         async function reconocerPalabra() {
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -67,7 +65,7 @@ window.onload = async function () {
         Accept: "application/json",
         Authorization: "application/json",
         Authorization:
-            "Basic YzJWeVoybHZhVzV6WVc1dmNHRmtRR2R0WVdsc0xtTnZiUTpZU2REWFZFdWhfdUpCbUVYdXRVTXI=",
+            "Basic WVd4aGJtUnZjM1J5WlhNd01ERkFaMjFoYVd3dVkyOXQ6Z29kTnVxS3FaWlNMNmk0VUprWklP",
     };
     await fetch("https://api.d-id.com/credits", {
         method: "GET",
@@ -87,7 +85,7 @@ window.onload = async function () {
         Accept: "application/json",
         Authorization: "application/json",
         Authorization:
-            "Basic YzJWeVoybHZhVzV6WVc1dmNHRmtRR2R0WVdsc0xtTnZiUTpZU2REWFZFdWhfdUpCbUVYdXRVTXI=",
+            "Basic WVd4aGJtUnZjM1J5WlhNd01ERkFaMjFoYVd3dVkyOXQ6Z29kTnVxS3FaWlNMNmk0VUprWklP",
         "Content-Type": "application/json",
     };
     let body = JSON.stringify({
@@ -166,7 +164,7 @@ window.onload = async function () {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer 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",
+                    Authorization: "Bearer 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",
                 },
                 body: JSON.stringify({
                     model: "gpt-3.5-turbo",
